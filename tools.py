@@ -16,8 +16,8 @@ def init_args(args):
 
 def tuneThresholdfromScore(scores, labels, target_fa, target_fr = None):
 	
-	fpr, tpr, thresholds = metrics.roc_curve(labels, scores, pos_label=1)
-	fnr = 1 - tpr
+	fpr, tpr, thresholds = metrics.roc_curve(labels, scores, pos_label=1)##as in slide the fpr is the FAR(False Acceptance Rate)
+	fnr = 1 - tpr ## as in slide fnr is the FRR(False Rejection Rate)
 	tunedThreshold = [];
 	if target_fr:
 		for tfr in target_fr:

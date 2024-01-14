@@ -146,11 +146,11 @@ class ECAPA_TDNN(nn.Module):
         self.conv1  = nn.Conv1d(80, C, kernel_size=5, stride=1, padding=2)
         self.relu   = nn.ReLU()
         self.bn1    = nn.BatchNorm1d(C)
-        self.layer1 = Bottle2neck(C, C, kernel_size=3, dilation=2, scale=8)
-        self.layer2 = Bottle2neck(C, C, kernel_size=3, dilation=3, scale=8)
-        self.layer3 = Bottle2neck(C, C, kernel_size=3, dilation=4, scale=8)
+        self.layer1 = Bottle2neck(C, C, kernel_size=3, dilation=2, scale=8)             #SE-Res2Block1
+        self.layer2 = Bottle2neck(C, C, kernel_size=3, dilation=3, scale=8)             #SE-Res2Block2
+        self.layer3 = Bottle2neck(C, C, kernel_size=3, dilation=4, scale=8)             #SE-Res2Block3
         # I fixed the shape of the output from MFA layer, that is close to the setting from ECAPA paper.
-        self.layer4 = nn.Conv1d(3*C, 1536, kernel_size=1)
+        self.layer4 = nn.Conv1d(3*C, 1536, kernel_size=1)                               #Conv1D before stat pooling
         self.attention = nn.Sequential(
             nn.Conv1d(4608, 256, kernel_size=1),
             nn.ReLU(),
@@ -161,7 +161,11 @@ class ECAPA_TDNN(nn.Module):
             )
         self.bn5 = nn.BatchNorm1d(3072)
         self.fc6 = nn.Linear(3072, 192)
+        #self.fc6 = nn.Linear(3072, 4)
         self.bn6 = nn.BatchNorm1d(192)
+
+        #self.fc7 = nn.Linear(192, 4)
+        #self.bn6 = nn.BatchNorm1d(4)
 
 
     def forward(self, x, aug):
